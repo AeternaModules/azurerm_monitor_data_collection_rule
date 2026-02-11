@@ -111,13 +111,13 @@ EOT
     description                 = optional(string)
     kind                        = optional(string)
     tags                        = optional(map(string))
-    data_flow = object({
+    data_flow = list(object({
       built_in_transform = optional(string)
       destinations       = list(string)
       output_stream      = optional(string)
       streams            = list(string)
       transform_kql      = optional(string)
-    })
+    }))
     destinations = object({
       azure_monitor_metrics = optional(object({
         name = string
@@ -223,13 +223,29 @@ EOT
       identity_ids = optional(set(string))
       type         = string
     }))
-    stream_declaration = optional(object({
+    stream_declaration = optional(list(object({
       column = object({
         name = string
         type = string
       })
       stream_name = string
-    }))
+    })))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.monitor_data_collection_rules : (
+        length(v.data_flow) >= 1
+      )
+    ])
+    error_message = "Each data_flow list must contain at least 1 items"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.monitor_data_collection_rules : (
+        v.stream_declaration == null || (length(v.stream_declaration) >= 1)
+      )
+    ])
+    error_message = "Each stream_declaration list must contain at least 1 items"
+  }
 }
 

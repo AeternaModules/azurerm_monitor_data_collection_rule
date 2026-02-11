@@ -9,12 +9,15 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
   kind                        = each.value.kind
   tags                        = each.value.tags
 
-  data_flow {
-    built_in_transform = each.value.data_flow.built_in_transform
-    destinations       = each.value.data_flow.destinations
-    output_stream      = each.value.data_flow.output_stream
-    streams            = each.value.data_flow.streams
-    transform_kql      = each.value.data_flow.transform_kql
+  dynamic "data_flow" {
+    for_each = each.value.data_flow
+    content {
+      built_in_transform = data_flow.value.built_in_transform
+      destinations       = data_flow.value.destinations
+      output_stream      = data_flow.value.output_stream
+      streams            = data_flow.value.streams
+      transform_kql      = data_flow.value.transform_kql
+    }
   }
 
   destinations {
@@ -192,7 +195,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
   }
 
   dynamic "stream_declaration" {
-    for_each = each.value.stream_declaration != null ? [each.value.stream_declaration] : []
+    for_each = each.value.stream_declaration != null ? each.value.stream_declaration : []
     content {
       column {
         name = stream_declaration.value.column.name
