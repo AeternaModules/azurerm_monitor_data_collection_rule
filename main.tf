@@ -42,21 +42,21 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
       }
     }
     dynamic "log_analytics" {
-      for_each = each.value.destinations.log_analytics != null ? [each.value.destinations.log_analytics] : []
+      for_each = each.value.destinations.log_analytics != null ? each.value.destinations.log_analytics : []
       content {
         name                  = log_analytics.value.name
         workspace_resource_id = log_analytics.value.workspace_resource_id
       }
     }
     dynamic "monitor_account" {
-      for_each = each.value.destinations.monitor_account != null ? [each.value.destinations.monitor_account] : []
+      for_each = each.value.destinations.monitor_account != null ? each.value.destinations.monitor_account : []
       content {
         monitor_account_id = monitor_account.value.monitor_account_id
         name               = monitor_account.value.name
       }
     }
     dynamic "storage_blob" {
-      for_each = each.value.destinations.storage_blob != null ? [each.value.destinations.storage_blob] : []
+      for_each = each.value.destinations.storage_blob != null ? each.value.destinations.storage_blob : []
       content {
         container_name     = storage_blob.value.container_name
         name               = storage_blob.value.name
@@ -64,7 +64,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
       }
     }
     dynamic "storage_blob_direct" {
-      for_each = each.value.destinations.storage_blob_direct != null ? [each.value.destinations.storage_blob_direct] : []
+      for_each = each.value.destinations.storage_blob_direct != null ? each.value.destinations.storage_blob_direct : []
       content {
         container_name     = storage_blob_direct.value.container_name
         name               = storage_blob_direct.value.name
@@ -72,7 +72,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
       }
     }
     dynamic "storage_table_direct" {
-      for_each = each.value.destinations.storage_table_direct != null ? [each.value.destinations.storage_table_direct] : []
+      for_each = each.value.destinations.storage_table_direct != null ? each.value.destinations.storage_table_direct : []
       content {
         name               = storage_table_direct.value.name
         storage_account_id = storage_table_direct.value.storage_account_id
@@ -87,15 +87,18 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
       dynamic "data_import" {
         for_each = data_sources.value.data_import != null ? [data_sources.value.data_import] : []
         content {
-          event_hub_data_source {
-            consumer_group = data_import.value.event_hub_data_source.consumer_group
-            name           = data_import.value.event_hub_data_source.name
-            stream         = data_import.value.event_hub_data_source.stream
+          dynamic "event_hub_data_source" {
+            for_each = data_import.value.event_hub_data_source
+            content {
+              consumer_group = event_hub_data_source.value.consumer_group
+              name           = event_hub_data_source.value.name
+              stream         = event_hub_data_source.value.stream
+            }
           }
         }
       }
       dynamic "extension" {
-        for_each = data_sources.value.extension != null ? [data_sources.value.extension] : []
+        for_each = data_sources.value.extension != null ? data_sources.value.extension : []
         content {
           extension_json     = extension.value.extension_json
           extension_name     = extension.value.extension_name
@@ -105,7 +108,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "iis_log" {
-        for_each = data_sources.value.iis_log != null ? [data_sources.value.iis_log] : []
+        for_each = data_sources.value.iis_log != null ? data_sources.value.iis_log : []
         content {
           log_directories = iis_log.value.log_directories
           name            = iis_log.value.name
@@ -113,7 +116,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "log_file" {
-        for_each = data_sources.value.log_file != null ? [data_sources.value.log_file] : []
+        for_each = data_sources.value.log_file != null ? data_sources.value.log_file : []
         content {
           file_patterns = log_file.value.file_patterns
           format        = log_file.value.format
@@ -130,7 +133,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "performance_counter" {
-        for_each = data_sources.value.performance_counter != null ? [data_sources.value.performance_counter] : []
+        for_each = data_sources.value.performance_counter != null ? data_sources.value.performance_counter : []
         content {
           counter_specifiers            = performance_counter.value.counter_specifiers
           name                          = performance_counter.value.name
@@ -139,17 +142,17 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "platform_telemetry" {
-        for_each = data_sources.value.platform_telemetry != null ? [data_sources.value.platform_telemetry] : []
+        for_each = data_sources.value.platform_telemetry != null ? data_sources.value.platform_telemetry : []
         content {
           name    = platform_telemetry.value.name
           streams = platform_telemetry.value.streams
         }
       }
       dynamic "prometheus_forwarder" {
-        for_each = data_sources.value.prometheus_forwarder != null ? [data_sources.value.prometheus_forwarder] : []
+        for_each = data_sources.value.prometheus_forwarder != null ? data_sources.value.prometheus_forwarder : []
         content {
           dynamic "label_include_filter" {
-            for_each = prometheus_forwarder.value.label_include_filter != null ? [prometheus_forwarder.value.label_include_filter] : []
+            for_each = prometheus_forwarder.value.label_include_filter != null ? prometheus_forwarder.value.label_include_filter : []
             content {
               label = label_include_filter.value.label
               value = label_include_filter.value.value
@@ -160,7 +163,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "syslog" {
-        for_each = data_sources.value.syslog != null ? [data_sources.value.syslog] : []
+        for_each = data_sources.value.syslog != null ? data_sources.value.syslog : []
         content {
           facility_names = syslog.value.facility_names
           log_levels     = syslog.value.log_levels
@@ -169,7 +172,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "windows_event_log" {
-        for_each = data_sources.value.windows_event_log != null ? [data_sources.value.windows_event_log] : []
+        for_each = data_sources.value.windows_event_log != null ? data_sources.value.windows_event_log : []
         content {
           name           = windows_event_log.value.name
           streams        = windows_event_log.value.streams
@@ -177,7 +180,7 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
         }
       }
       dynamic "windows_firewall_log" {
-        for_each = data_sources.value.windows_firewall_log != null ? [data_sources.value.windows_firewall_log] : []
+        for_each = data_sources.value.windows_firewall_log != null ? data_sources.value.windows_firewall_log : []
         content {
           name    = windows_firewall_log.value.name
           streams = windows_firewall_log.value.streams
@@ -197,9 +200,12 @@ resource "azurerm_monitor_data_collection_rule" "monitor_data_collection_rules" 
   dynamic "stream_declaration" {
     for_each = each.value.stream_declaration != null ? each.value.stream_declaration : []
     content {
-      column {
-        name = stream_declaration.value.column.name
-        type = stream_declaration.value.column.type
+      dynamic "column" {
+        for_each = stream_declaration.value.column
+        content {
+          name = column.value.name
+          type = column.value.type
+        }
       }
       stream_name = stream_declaration.value.stream_name
     }

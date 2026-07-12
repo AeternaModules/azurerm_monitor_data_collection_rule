@@ -130,51 +130,51 @@ EOT
         event_hub_id = string
         name         = string
       }))
-      log_analytics = optional(object({
+      log_analytics = optional(list(object({
         name                  = string
         workspace_resource_id = string
-      }))
-      monitor_account = optional(object({
+      })))
+      monitor_account = optional(list(object({
         monitor_account_id = string
         name               = string
-      }))
-      storage_blob = optional(object({
+      })))
+      storage_blob = optional(list(object({
         container_name     = string
         name               = string
         storage_account_id = string
-      }))
-      storage_blob_direct = optional(object({
+      })))
+      storage_blob_direct = optional(list(object({
         container_name     = string
         name               = string
         storage_account_id = string
-      }))
-      storage_table_direct = optional(object({
+      })))
+      storage_table_direct = optional(list(object({
         name               = string
         storage_account_id = string
         table_name         = string
-      }))
+      })))
     })
     data_sources = optional(object({
       data_import = optional(object({
-        event_hub_data_source = object({
+        event_hub_data_source = list(object({
           consumer_group = optional(string)
           name           = string
           stream         = string
-        })
+        }))
       }))
-      extension = optional(object({
+      extension = optional(list(object({
         extension_json     = optional(string)
         extension_name     = string
         input_data_sources = optional(list(string))
         name               = string
         streams            = list(string)
-      }))
-      iis_log = optional(object({
+      })))
+      iis_log = optional(list(object({
         log_directories = optional(list(string))
         name            = string
         streams         = list(string)
-      }))
-      log_file = optional(object({
+      })))
+      log_file = optional(list(object({
         file_patterns = list(string)
         format        = string
         name          = string
@@ -184,50 +184,50 @@ EOT
           })
         }))
         streams = list(string)
-      }))
-      performance_counter = optional(object({
+      })))
+      performance_counter = optional(list(object({
         counter_specifiers            = list(string)
         name                          = string
         sampling_frequency_in_seconds = number
         streams                       = list(string)
-      }))
-      platform_telemetry = optional(object({
+      })))
+      platform_telemetry = optional(list(object({
         name    = string
         streams = list(string)
-      }))
-      prometheus_forwarder = optional(object({
-        label_include_filter = optional(object({
+      })))
+      prometheus_forwarder = optional(list(object({
+        label_include_filter = optional(list(object({
           label = string
           value = string
-        }))
+        })))
         name    = string
         streams = list(string)
-      }))
-      syslog = optional(object({
+      })))
+      syslog = optional(list(object({
         facility_names = list(string)
         log_levels     = list(string)
         name           = string
         streams        = list(string)
-      }))
-      windows_event_log = optional(object({
+      })))
+      windows_event_log = optional(list(object({
         name           = string
         streams        = list(string)
         x_path_queries = list(string)
-      }))
-      windows_firewall_log = optional(object({
+      })))
+      windows_firewall_log = optional(list(object({
         name    = string
         streams = list(string)
-      }))
+      })))
     }))
     identity = optional(object({
       identity_ids = optional(set(string))
       type         = string
     }))
     stream_declaration = optional(list(object({
-      column = object({
+      column = list(object({
         name = string
         type = string
-      })
+      }))
       stream_name = string
     })))
   }))
