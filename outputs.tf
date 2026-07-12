@@ -1,3 +1,7 @@
+output "monitor_data_collection_rules_id" {
+  description = "Map of id values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
+  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => v.id }
+}
 output "monitor_data_collection_rules_data_collection_endpoint_id" {
   description = "Map of data_collection_endpoint_id values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
   value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => v.data_collection_endpoint_id }
