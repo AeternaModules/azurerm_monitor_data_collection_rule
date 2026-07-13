@@ -242,10 +242,18 @@ EOT
   validation {
     condition = alltrue([
       for k, v in var.monitor_data_collection_rules : (
-        v.stream_declaration == null || (length(v.stream_declaration) >= 1)
+        v.data_sources == null || (v.data_sources.data_import == null || (length(v.data_sources.data_import.event_hub_data_source) >= 1))
       )
     ])
-    error_message = "Each stream_declaration list must contain at least 1 items"
+    error_message = "Each event_hub_data_source list must contain at least 1 items"
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.monitor_data_collection_rules : (
+        v.stream_declaration == null || alltrue([for item in v.stream_declaration : (length(item.column) >= 1)])
+      )
+    ])
+    error_message = "Each column list must contain at least 1 items"
   }
 }
 
