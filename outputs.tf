@@ -12,7 +12,7 @@ output "monitor_data_collection_rules_data_flow" {
 }
 output "monitor_data_collection_rules_data_sources" {
   description = "Map of data_sources values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
-  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => v.data_sources if v.data_sources != null && length(v.data_sources) > 0 }
+  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => one(v.data_sources) if v.data_sources != null && length(v.data_sources) > 0 }
 }
 output "monitor_data_collection_rules_description" {
   description = "Map of description values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
@@ -20,11 +20,11 @@ output "monitor_data_collection_rules_description" {
 }
 output "monitor_data_collection_rules_destinations" {
   description = "Map of destinations values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
-  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => v.destinations if v.destinations != null && length(v.destinations) > 0 }
+  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => one(v.destinations) if v.destinations != null && length(v.destinations) > 0 }
 }
 output "monitor_data_collection_rules_identity" {
   description = "Map of identity values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
-  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => v.identity if v.identity != null && length(v.identity) > 0 }
+  value       = { for k, v in azurerm_monitor_data_collection_rule.monitor_data_collection_rules : k => one(v.identity) if v.identity != null && length(v.identity) > 0 }
 }
 output "monitor_data_collection_rules_immutable_id" {
   description = "Map of immutable_id values across all monitor_data_collection_rules, keyed the same as var.monitor_data_collection_rules"
